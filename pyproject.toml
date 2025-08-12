@@ -1,0 +1,15 @@
+[project]
+
+name = "test_mail_server"
+version = "0.1.0"
+description = "A test mail server with certificate generation and Docker support."
+authors = ["Tony Philip <>"]
+requires-python = ">=3.8"
+
+[project.dependencies]
+# Add your dependencies here, e.g.:
+# flask = "*"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

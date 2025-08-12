@@ -1,0 +1,36 @@
+services:
+  mailserver:
+    image: docker.io/mailserver/docker-mailserver:15.0.2
+    container_name: mailserver
+    hostname: mail.local
+    domainname: local
+    environment:
+      HOSTNAME: mail.local
+      DOMAINNAME: local
+      SSL_TYPE: manual
+      SSL_KEY_PATH: /tmp/docker-mailserver/ssl/mail.key.pem
+      SSL_CERT_PATH: /tmp/docker-mailserver/ssl/mail.crt.pem
+      ENABLE_SPAMASSASSIN: 0
+      ENABLE_CLAMAV: 0
+      ENABLE_FAIL2BAN: 0
+      ONE_DIR: 1
+      DMS_DEBUG: 0
+      LOG_LEVEL: info
+    ports:
+      - "25:25"
+      - "143:143"
+    volumes:
+      - ./mail-data:/var/mail
+      - mail-state:/var/mail-state
+      - mail-logs:/var/log/mail
+      - ./config/:/tmp/docker-mailserver/
+      - ./mail.key.pem:/tmp/docker-mailserver/ssl/mail.key.pem:ro
+      - ./mail.crt.pem:/tmp/docker-mailserver/ssl/mail.crt.pem:ro
+    cap_add:
+      - NET_ADMIN
+      - SYS_PTRACE
+    restart: unless-stopped
+
+volumes:
+  mail-state:
+  mail-logs:
