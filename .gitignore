@@ -61,9 +61,12 @@ coverage.xml
 .mypy_cache/
 .dmypy.json
 
+
 # Docker
 **/docker-imap/mail.crt.pem
 **/docker-imap/mail.key.pem
+docker-imap/config/
+docker-imap/mail-data/
 
 # VS Code
 .vscode/
