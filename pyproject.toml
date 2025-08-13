@@ -1,15 +1,38 @@
 [project]
-name = "test_mail_server"
+name = "test-mail-server"
 version = "0.1.0"
-description = "A test mail server with certificate generation and Docker support."
+description = "Docker-based local test mail server with LLM-driven IMAP seeder (users, threads, spam)."
+readme = "README.md"
 authors = [
     { name = "Tony Philip", email = "tonyphilip@gmail.com" }
 ]
-requires-python = ">=3.8"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers",
+    "Topic :: Communications :: Email",
+    "Topic :: Software Development :: Testing",
+]
 dependencies = [
-    "cryptography"
+    "cryptography",
+    "requests>=2.31.0",
 ]
 
+[project.scripts]
+email-seeder = "email_seeder:main"
+
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["email_seeder"]
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.ruff]
+select = ["E", "F"]
+line-length = 100

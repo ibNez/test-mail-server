@@ -28,7 +28,8 @@ var/
 .venv/
 venv/
 ENV/
-.env/
+*.env
+seed_users.json
 
 # PyInstaller
 *.manifest
