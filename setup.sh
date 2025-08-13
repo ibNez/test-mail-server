@@ -43,15 +43,36 @@ cd docker-imap
 docker compose up -d
 cd ..
 
-sleep 5
 
-# Check if mailserver container is running, then add default user
-if docker ps --format '{{.Names}}' | grep -q '^mailserver$'; then
-    echo "Creating default mail user: postmaster@local"
-    docker exec -i mailserver setup email add postmaster@local password123
-    echo "Default mail user created."
+# Wait for mailserver container to be running
+MAX_WAIT=180
+WAITED=0
+echo "Waiting for mailserver container to be running (up to $MAX_WAIT seconds)..."
+while [ $WAITED -lt $MAX_WAIT ]; do
+    if docker ps | grep mailserver | awk '{print $NF}' | head -n1; then
+        echo "Mailserver container is running after $WAITED seconds."
+        break
+    fi
+    if [ $((WAITED % 10)) -eq 0 ]; then
+        echo "...still waiting for container ($WAITED seconds elapsed)"
+    fi
+    sleep 2
+    WAITED=$((WAITED+2))
+done
+if ! docker ps | grep mailserver | awk '{print $NF}' | head -n1; then
+    echo "Mailserver container did not start after $MAX_WAIT seconds. Skipping user creation."
+    exit 1
+fi
+
+# Add default user
+echo "Creating default mail user: postmaster@local"
+docker exec -i mailserver setup email add postmaster@local password123
+echo "Default mail user created."
+# Check if user exists
+if docker exec -i mailserver setup email list | grep 'postmaster@local'; then
+    echo "Verified: postmaster@local exists."
 else
-    echo "Mailserver container is not running. Skipping user creation."
+    echo "Warning: postmaster@local was not found after creation!"
 fi
 
 echo "Setup complete!"
