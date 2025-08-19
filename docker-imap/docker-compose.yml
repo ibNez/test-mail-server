@@ -19,6 +19,7 @@ services:
     ports:
       - "25:25"
       - "143:143"
+      - "993:993"
     volumes:
       - ./mail-data:/var/mail
       - mail-state:/var/mail-state
